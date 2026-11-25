@@ -1,0 +1,81 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPosts, uniqueSlugs, pickPost, estimateReadMinutes } from "../../lib/content";
+import { getCollection, render } from "astro:content";
+import { t } from "../../lib/i18n";
+import { SITE } from "../../lib/profile";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const entries = await getCollection("blog");
+
+  return uniqueSlugs(posts).map((slug) => {
+    // Prefer the Indonesian source (site default). Match on filePath because the
+    // loader slugifies ids defensively enough that `foo.id.md` may land as
+    // `foo-id` instead of `foo.id`.
+    const entry =
+      entries.find((e) => (e.filePath ?? "").endsWith(`/${slug}.id.md`)) ??
+      entries.find((e) => (e.filePath ?? "").endsWith(`/${slug}.md`));
+
+    return {
+      params: { slug },
+      props: { post: pickPost(posts, slug, "id"), entry },
+    };
+  });
+}
+
+const { post, entry } = Astro.props;
+const lang = "id" as const;
+const { Content } = await render(entry);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.title,
+  description: post.description,
+  datePublished: post.date,
+  dateModified: post.date,
+  inLanguage: post.lang,
+  mainEntityOfPage: new URL(`/blogs/${post.slug}`, SITE.url).toString(),
+  author: { "@type": "Person", name: SITE.name, url: SITE.url },
+  keywords: post.tags.join(", "),
+};
+---
+
+<BaseLayout
+  title={post.title}
+  description={post.description}
+  path={`/blogs/${post.slug}`}
+  lang={post.lang}
+  jsonLd={jsonLd}
+  ogType="article"
+  publishedAt={post.date}
+  tags={post.tags}
+>
+  <a href="/blogs" class="text-sm text-muted-foreground hover:text-foreground">← {t(lang, "sections.backToBlog")}</a>
+
+  <article class="mt-3">
+    <header class="p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+      <h1 class="text-2xl lg:text-3xl font-semibold font-sora">{post.title}</h1>
+      <p class="text-muted-foreground mt-2">{post.description}</p>
+      <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        <span>{t(lang, "blog.publishedOn")} {post.date}</span>
+        <span aria-hidden="true">·</span>
+        <span>{estimateReadMinutes(post.body)} {t(lang, "sections.minRead")}</span>
+        <span aria-hidden="true">·</span>
+        <span>{post.lang.toUpperCase()}</span>
+      </div>
+      {post.tags.length > 0 && (
+        <ul class="mt-3 flex flex-wrap gap-1.5">
+          {post.tags.map((tag) => (
+            <li class="rounded border bg-secondary text-secondary-foreground px-2 py-0.5 text-[11px]">{tag}</li>
+          ))}
+        </ul>
+      )}
+    </header>
+
+    <div class="prose-article mt-6">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

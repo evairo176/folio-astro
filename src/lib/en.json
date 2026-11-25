@@ -1,0 +1,100 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "blogs": "Blogs",
+    "now": "Now",
+    "uses": "Uses",
+    "contact": "Contact"
+  },
+  "banner": {
+    "title": "Work in progress.",
+    "message": "This portfolio is still being built, some sections and projects aren't 100% complete yet.",
+    "dismiss": "Dismiss"
+  },
+  "intro": {
+    "greeting": "Hi, I'm Dicki",
+    "roles": "Senior Fullstack Developer | .NET, React, Golang | Data & DevOps",
+    "location": "Based in Indramayu, Indonesia",
+    "viewCv": "View CV",
+    "downloadCv": "Download CV",
+    "bio": "Senior Fullstack Developer with 4+ years of experience building enterprise applications, data platforms, and AI-powered tools. Strong in .NET, React, Golang, Node.js, Python, PostgreSQL, and cloud-native delivery. I focus on turning complex business workflows into practical systems that improve reporting, operations, and team productivity."
+  },
+  "sections": {
+    "skills": "Skills",
+    "skillsSub": "Technologies I work with.",
+    "techStack": "Tech Stack",
+    "techStackSub": "Tools and technologies I build with day to day.",
+    "experience": "Experience",
+    "experienceSub": "My professional journey.",
+    "education": "Education",
+    "educationSub": "Academic background.",
+    "certifications": "Certifications",
+    "certificationsSub": "Recent credentials.",
+    "career": "Experience",
+    "careerSub": "My professional journey.",
+    "projects": "Projects",
+    "projectsSub": "Things I've built.",
+    "blogs": "Latest Writing",
+    "blogsSub": "Notes, tutorials, and thoughts.",
+    "readMore": "Read more",
+    "viewAll": "View all",
+    "backToBlog": "Back to all posts",
+    "backToProjects": "Back to all projects",
+    "visitLive": "Visit live",
+    "viewSource": "View source",
+    "minRead": "min read"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Notes, tutorials, and thoughts on engineering.",
+    "empty": "No posts yet.",
+    "publishedOn": "Published on"
+  },
+  "projectsPage": {
+    "title": "Projects",
+    "subtitle": "A selection of things I've built.",
+    "empty": "No projects yet."
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Let's build something together.",
+    "email": "Email",
+    "phone": "Phone",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "formTitle": "Send a Message",
+    "formDesc": "Got a project or opportunity? Drop a note here and I'll reply straight to your inbox.",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "you@email.com",
+    "message": "Message",
+    "messagePlaceholder": "Tell me what you need...",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent. Thanks, I'll get back to you soon.",
+    "error": "Failed to send. Try again or email directly.",
+    "orReach": "Or reach me via:"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Senior Fullstack Developer, data engineer, and pragmatic builder.",
+    "body": [
+      "I'm Dicki Prasetya, a Senior Fullstack Developer with 4+ years of experience shipping production software across the whole stack - backend APIs, database design, frontend interfaces, data pipelines, and deployment. I work mainly with .NET, React/Next.js, Node.js, and Golang on SQL Server and PostgreSQL, and I care about things actually working in production.",
+      "What I'm good at: turning complex business workflows into practical systems, building role-based access and reporting/export features, automating email and notifications, and self-hosting everything I build - including this portfolio, a resume builder, and a POS platform I manage end to end. I learn by shipping, and I'd rather deliver something measurable than over-promise."
+    ],
+    "principlesTitle": "How I Work",
+    "principles": [
+      "Design before code - scope first, so the build is deliberate.",
+      "Defensible numbers over inflated claims.",
+      "Verify everything before it ships.",
+      "Own the full lifecycle: database, backend, UI, deployment."
+    ],
+    "cta": "Open to senior fullstack and data-focused roles, including remote. Let's talk.",
+    "githubTitle": "GitHub Activity",
+    "githubSub": "My contribution graph over the past year.",
+    "githubAlt": "Dicki Prasetya's GitHub contribution graph",
+    "ctaHeader": "Let's build something"
+  }
+}

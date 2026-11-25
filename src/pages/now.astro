@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const items = [
+  {
+    emoji: "🏗️",
+    title: "Membangun internal tools enterprise di Fiberstar",
+    body: "Merancang dan mengirimkan sistem internal berbasis .NET dan React, memimpin code review, dan mentoring engineer. Fokus saat ini di sekitar dashboard operasional dan sistem berbasis workflow/approval.",
+  },
+  {
+    emoji: "🧩",
+    title: "Merancang platform internal tools yang reusable",
+    body: "Mengeksplorasi arsitektur monorepo (auth/RBAC, DataTable, form builder, approval engine, audit log, export) supaya rangkaian aplikasi enterprise, complaint dashboard, voucher, e-payment, e-travel, bisa dibangun di atas fondasi yang sama.",
+  },
+  {
+    emoji: "🤖",
+    title: "Mendalami AI/RAG dan agent workflow",
+    body: "Memakai spec-driven development dan AI coding agent dalam alur kerja nyata, dengan verification loop (build + test wajib) supaya output tetap akurat dan bisa dipertahankan.",
+  },
+  {
+    emoji: "🛠️",
+    title: "Nge-build dan self-host tools sendiri",
+    body: "Portfolio ini, resume builder self-host, dan project-management SaaS, semuanya berjalan di infrastruktur yang saya kelola sendiri (Docker, Nginx, Cloudflare, CI/CD).",
+  },
+];
+---
+
+<BaseLayout title="Sekarang" description="Apa yang sedang saya kerjakan dan pelajari saat ini." path="/now" lang="id">
+  <div class="p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+    <h1 class="text-2xl lg:text-3xl font-semibold font-sora">Sekarang</h1>
+    <p class="text-muted-foreground mt-1">Apa yang sedang saya fokuskan saat ini.</p>
+    <p class="text-xs text-muted-foreground mt-2">Diperbarui Juni 2026</p>
+  </div>
+
+  <div class="mt-4 grid gap-3">
+    {items.map((item) => (
+      <div class="flex gap-4 p-4 rounded-md border bg-card text-card-foreground">
+        <span aria-hidden="true" class="text-2xl shrink-0">{item.emoji}</span>
+        <div class="space-y-1">
+          <h2 class="font-semibold font-sora">{item.title}</h2>
+          <p class="text-sm text-muted-foreground leading-relaxed">{item.body}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <p class="mt-4 text-xs text-muted-foreground">Terinspirasi dari nownownow.com, halaman "now" yang jujur, bukan etalase.</p>
+</BaseLayout>

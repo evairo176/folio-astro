@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPosts, uniqueSlugs, pickPost, estimateReadMinutes } from "../../lib/content";
+import { t } from "../../lib/i18n";
+
+const lang = "id" as const;
+const posts = await getPosts();
+const entries = uniqueSlugs(posts)
+  .map((slug) => pickPost(posts, slug, lang))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p))
+  .sort((a, b) => (a.date < b.date ? 1 : -1));
+---
+
+<BaseLayout title={t(lang, "blog.title")} description={t(lang, "blog.subtitle")} path="/blogs" lang={lang}>
+  <div class="p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+    <h1 class="text-2xl lg:text-3xl font-semibold font-sora">{t(lang, "blog.title")}</h1>
+    <p class="text-muted-foreground mt-1">{t(lang, "blog.subtitle")}</p>
+  </div>
+
+  {entries.length === 0 ? (
+    <p class="mt-6 text-sm text-muted-foreground">{t(lang, "blog.empty")}</p>
+  ) : (
+    <div class="mt-6 space-y-3">
+      {entries.map((p) => (
+        <a href={`/blogs/${p.slug}`} class="group block rounded-md border bg-card text-card-foreground p-4 lg:p-5 hover:ring-1 hover:ring-sky-500/40 transition-all">
+          <h2 class="font-semibold font-sora group-hover:text-sky-500">{p.title}</h2>
+          <p class="mt-1 text-sm text-muted-foreground">{p.description}</p>
+          <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+            <span>{t(lang, "blog.publishedOn")} {p.date}</span>
+            <span aria-hidden="true">·</span>
+            <span>{estimateReadMinutes(p.body)} {t(lang, "sections.minRead")}</span>
+          </div>
+          {p.tags.length > 0 && (
+            <ul class="mt-2 flex flex-wrap gap-1.5">
+              {p.tags.slice(0, 6).map((tag) => (
+                <li class="rounded border bg-secondary text-secondary-foreground px-2 py-0.5 text-[11px]">{tag}</li>
+              ))}
+            </ul>
+          )}
+        </a>
+      ))}
+    </div>
+  )}
+</BaseLayout>

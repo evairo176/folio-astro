@@ -1,0 +1,113 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { t } from "../lib/i18n";
+import { SOCIAL } from "../lib/profile";
+
+const lang = "id" as const;
+
+const channels = [
+  { label: t(lang, "contact.email"), value: SOCIAL.email, href: `mailto:${SOCIAL.email}` },
+  { label: t(lang, "contact.phone"), value: SOCIAL.phone, href: `tel:${SOCIAL.phone.replace(/[^+\d]/g, "")}` },
+  { label: t(lang, "contact.github"), value: "evairo176", href: SOCIAL.github },
+  { label: t(lang, "contact.linkedin"), value: "dicki-prasetya", href: SOCIAL.linkedin },
+];
+
+const inputClass = "w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow";
+---
+
+<BaseLayout title={t(lang, "contact.title")} description={t(lang, "contact.subtitle")} path="/contact" lang={lang}>
+  <div class="p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+    <h1 class="text-2xl lg:text-3xl font-semibold font-sora">{t(lang, "contact.title")}</h1>
+    <p class="text-muted-foreground mt-1">{t(lang, "contact.subtitle")}</p>
+  </div>
+
+  <div class="mt-4 grid gap-4 lg:grid-cols-2">
+    <section class="p-4 lg:p-6 rounded-md border bg-card text-card-foreground">
+      <h2 class="text-lg font-semibold font-sora">{t(lang, "contact.title")}</h2>
+      <ul class="mt-3 space-y-3">
+        {channels.map((c) => (
+          <li>
+            <a href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" class="group flex items-start gap-3">
+              <span aria-hidden="true" class="mt-1 size-1.5 rounded-full bg-sky-500"></span>
+              <span>
+                <span class="block text-xs text-muted-foreground">{c.label}</span>
+                <span class="block text-sm group-hover:text-sky-500 break-all">{c.value}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="p-4 lg:p-6 rounded-md border bg-card text-card-foreground">
+      <h2 class="text-lg font-semibold font-sora">{t(lang, "contact.formTitle")}</h2>
+      <p class="text-sm text-muted-foreground mt-1">{t(lang, "contact.formDesc")}</p>
+
+      <!-- Static site: the form posts to the contact endpoint through fetch and
+           degrades to a mailto: link when JS is off. -->
+      <form id="contact-form" class="mt-4 grid gap-4">
+        <div>
+          <label for="name" class="block text-sm font-medium mb-1">{t(lang, "contact.name")}</label>
+          <input id="name" name="name" type="text" required placeholder={t(lang, "contact.namePlaceholder")} class={inputClass} />
+        </div>
+        <div>
+          <label for="email" class="block text-sm font-medium mb-1">{t(lang, "contact.email")}</label>
+          <input id="email" name="email" type="email" required placeholder={t(lang, "contact.emailPlaceholder")} class={inputClass} />
+        </div>
+        <!-- honeypot -->
+        <input type="text" name="company" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+        <div>
+          <label for="message" class="block text-sm font-medium mb-1">{t(lang, "contact.message")}</label>
+          <textarea id="message" name="message" rows="5" required placeholder={t(lang, "contact.messagePlaceholder")} class={inputClass}></textarea>
+        </div>
+        <button type="submit" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 h-9 text-sm font-medium hover:opacity-90">
+          {t(lang, "contact.send")}
+        </button>
+        <p id="contact-status" class="text-xs text-muted-foreground" role="status" aria-live="polite"></p>
+        <noscript>
+          <p class="text-xs text-muted-foreground">
+            JavaScript mati. Kirim langsung ke <a class="text-sky-500 underline" href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a>.
+          </p>
+        </noscript>
+      </form>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById("contact-form");
+    var status = document.getElementById("contact-status");
+    if (!form) return;
+    var sending = false;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (sending) return;
+      var data = new FormData(form);
+      var payload = {
+        name: String(data.get("name") || ""),
+        email: String(data.get("email") || ""),
+        message: String(data.get("message") || ""),
+        company: String(data.get("company") || ""),
+      };
+      sending = true;
+      status.textContent = "Mengirim...";
+      fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("send_failed");
+          status.textContent = "Terkirim. Terima kasih!";
+          form.reset();
+        })
+        .catch(function () {
+          status.textContent = "Gagal kirim. Email langsung: dickiprasetya176@gmail.com";
+        })
+        .finally(function () {
+          sending = false;
+        });
+    });
+  })();
+</script>

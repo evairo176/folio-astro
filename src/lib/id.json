@@ -1,0 +1,100 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "about": "Tentang",
+    "projects": "Proyek",
+    "blogs": "Blog",
+    "now": "Sekarang",
+    "uses": "Uses",
+    "contact": "Kontak"
+  },
+  "banner": {
+    "title": "Masih dalam pengembangan.",
+    "message": "Website ini masih dibangun, beberapa bagian dan proyek belum 100% selesai.",
+    "dismiss": "Tutup"
+  },
+  "intro": {
+    "greeting": "Hai, Saya Dicki",
+    "roles": "Senior Fullstack Developer | .NET, React, Golang | Data & DevOps",
+    "location": "Berlokasi di Indramayu, Indonesia",
+    "viewCv": "Lihat CV",
+    "downloadCv": "Unduh CV",
+    "bio": "Senior Fullstack Developer dengan pengalaman 4+ tahun membangun aplikasi enterprise, platform data, dan tools berbasis AI. Kuat di .NET, React, Golang, Node.js, Python, PostgreSQL, dan delivery berbasis cloud. Fokus saya adalah mengubah workflow bisnis yang kompleks menjadi sistem praktis yang membantu reporting, operasional, dan produktivitas tim."
+  },
+  "sections": {
+    "skills": "Keahlian",
+    "skillsSub": "Teknologi yang saya gunakan.",
+    "techStack": "Tech Stack",
+    "techStackSub": "Tools dan teknologi yang saya pakai sehari-hari.",
+    "experience": "Pengalaman",
+    "experienceSub": "Perjalanan profesional saya.",
+    "education": "Pendidikan",
+    "educationSub": "Latar belakang akademik.",
+    "certifications": "Sertifikasi",
+    "certificationsSub": "Kredensial terbaru.",
+    "career": "Pengalaman",
+    "careerSub": "Perjalanan profesional saya.",
+    "projects": "Proyek",
+    "projectsSub": "Hal-hal yang sudah saya bangun.",
+    "blogs": "Tulisan Terbaru",
+    "blogsSub": "Catatan, tutorial, dan pemikiran.",
+    "readMore": "Baca selengkapnya",
+    "viewAll": "Lihat semua",
+    "backToBlog": "Kembali ke semua tulisan",
+    "backToProjects": "Kembali ke semua proyek",
+    "visitLive": "Lihat live",
+    "viewSource": "Lihat source",
+    "minRead": "menit baca"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Catatan, tutorial, dan pemikiran seputar engineering.",
+    "empty": "Belum ada tulisan.",
+    "publishedOn": "Dipublikasikan pada"
+  },
+  "projectsPage": {
+    "title": "Proyek",
+    "subtitle": "Sebagian hal yang sudah saya bangun.",
+    "empty": "Belum ada proyek."
+  },
+  "contact": {
+    "title": "Kontak",
+    "subtitle": "Mari bangun sesuatu bersama.",
+    "email": "Email",
+    "phone": "Telepon",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "formTitle": "Kirim Pesan",
+    "formDesc": "Punya proyek atau peluang? Tulis di sini, gue bales langsung ke email.",
+    "name": "Nama",
+    "namePlaceholder": "Nama kamu",
+    "emailPlaceholder": "kamu@email.com",
+    "message": "Pesan",
+    "messagePlaceholder": "Ceritain kebutuhan kamu...",
+    "send": "Kirim Pesan",
+    "sending": "Mengirim...",
+    "success": "Pesan terkirim. Makasih, gue bakal bales secepatnya.",
+    "error": "Gagal mengirim. Coba lagi atau email langsung.",
+    "orReach": "Atau hubungi lewat:"
+  },
+  "about": {
+    "title": "Tentang Saya",
+    "subtitle": "Senior Fullstack Developer, data engineer, dan builder yang pragmatis.",
+    "body": [
+      "Saya Dicki Prasetya, Senior Fullstack Developer dengan pengalaman 4+ tahun mengirimkan software produksi di seluruh lapisan stack - backend API, desain database, frontend, data pipeline, sampai deployment. Saya terbiasa dengan .NET, React/Next.js, Node.js, dan Golang di atas SQL Server dan PostgreSQL, dan fokus pada hal yang benar-benar jalan di produksi.",
+      "Yang saya jual: mengubah workflow bisnis yang rumit jadi sistem yang praktis, membangun role-based access control, fitur reporting & export, otomasi email dan notifikasi, serta self-host application - termasuk portfolio ini, resume builder, dan platform POS yang saya kelola end-to-end. Saya belajar dengan nge-ship, dan lebih suka hasil yang terukur daripada janji yang berlebihan."
+    ],
+    "principlesTitle": "Cara Saya Bekerja",
+    "principles": [
+      "Desain dulu sebelum kode - scope jelas, build-nya terarah.",
+      "Angka yang bisa dipertanggungjawabkan, bukan klaim yang dilebih-lebihkan.",
+      "Verifikasi dulu sebelum ship.",
+      "Pegang full lifecycle: database, backend, UI, deployment."
+    ],
+    "cta": "Terbuka untuk peran senior fullstack dan data-focused, termasuk remote. Mari ngobrol.",
+    "githubTitle": "Aktivitas GitHub",
+    "githubSub": "Grafik kontribusi saya selama setahun terakhir.",
+    "githubAlt": "Grafik kontribusi GitHub Dicki Prasetya",
+    "ctaHeader": "Mari Bangun Sesuatu"
+  }
+}
