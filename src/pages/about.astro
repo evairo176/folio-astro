@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { t, tList } from "../lib/i18n";
-import { STATS, SOCIAL } from "../lib/profile";
+import { STATS, SOCIAL, CV_URL } from "../lib/profile";
 
 const lang = "id" as const;
 const paras = tList(lang, "about.body");
@@ -57,8 +57,14 @@ const principles = tList(lang, "about.principles");
     <h2 class="text-lg lg:text-xl font-semibold font-sora">{t(lang, "about.ctaHeader")}</h2>
     <p class="text-[15px] text-foreground/90 mt-2">{t(lang, "about.cta")}</p>
     <div class="mt-4 flex gap-2 flex-wrap">
-      <a href="/contact" class="inline-flex items-center rounded-md bg-primary text-primary-foreground px-4 h-9 text-sm font-medium hover:opacity-90">{t(lang, "nav.contact")}</a>
-      <a href={SOCIAL.github} target="_blank" rel="noreferrer" class="inline-flex items-center rounded-md bg-secondary text-secondary-foreground px-4 h-9 text-sm font-medium hover:opacity-90">GitHub</a>
+      <a href={CV_URL} target="_blank" rel="noreferrer" class="inline-flex items-center gap-1.5 rounded-md bg-secondary text-secondary-foreground px-4 h-9 text-sm font-medium hover:opacity-90">
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        {t(lang, "intro.viewCv")}
+      </a>
+      <a href="/contact" class="inline-flex items-center gap-1.5 rounded-md bg-primary text-primary-foreground px-4 h-9 text-sm font-medium hover:opacity-90">
+        {t(lang, "nav.contact")}
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </section>
 </BaseLayout>

@@ -1,17 +1,38 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE, STATS, SKILL_GROUPS, CORE_STACK, EXPERIENCE, EDUCATION, CERTIFICATIONS, CV_URL, CV_PDF_URL, SOCIAL } from "../lib/profile";
-import { t, tList } from "../lib/i18n";
+import { t } from "../lib/i18n";
 import { getProjects, getPosts, pickPost, estimateReadMinutes } from "../lib/content";
 
 const lang = "id" as const;
 
-const projects = (await getProjects()).slice(0, 3);
+const allProjects = await getProjects();
+const projects = allProjects.slice(0, 4);
+const totalProjects = allProjects.length;
+
 const posts = await getPosts();
 const latestPosts = posts
-  .filter((p) => p.lang === "en")
+  .filter((p) => p.lang === "id")
+  .sort((a, b) => (a.date < b.date ? 1 : -1))
   .slice(0, 3)
-  .map((p) => ({ ...p, preview: pickPost(posts, p.slug, lang) ?? p }));
+  .map((p) => ({ slug: p.slug, ...pickPost(posts, p.slug, lang) ?? p }));
+
+// Brand marks for the stack grid. Simple Icons paths inlined so the page stays
+// zero-JS; colour comes from the brand value in profile.ts.
+const ICONS: Record<string, string> = {
+  "TypeScript": "M1.125 0A1.125 1.125 0 0 0 0 1.125v21.75A1.125 1.125 0 0 0 1.125 24h21.75A1.125 1.125 0 0 0 24 22.875V1.125A1.125 1.125 0 0 0 22.875 0H1.125zm17.363 18.176c-.906.459-2.135.803-3.503.803-3.375 0-5.516-1.762-5.516-4.598V14.1h2.848v.256c0 1.36.795 2.139 2.217 2.139 1.109 0 1.89-.44 2.271-1.19.147-.28.209-.567.209-.961 0-.483-.19-.872-.573-1.19-.384-.32-1.052-.664-2.004-1.03-1.417-.51-2.323-1.043-2.945-1.657-.62-.613-.944-1.446-.944-2.458 0-1.166.427-2.122 1.272-2.83.845-.71 1.975-1.07 3.365-1.07 1.36 0 2.44.325 3.207.972.767.646 1.163 1.564 1.163 2.72v.24h-2.808v-.174c0-.805-.34-1.28-1.05-1.556-.42-.16-.9-.24-1.44-.24-.86 0-1.5.24-1.9.72-.3.36-.45.78-.45 1.26 0 .44.17.8.51 1.09.34.29 1.02.62 2.04 1 1.42.51 2.34 1.06 2.96 1.68.62.62.94 1.46.94 2.51 0 1.24-.44 2.24-1.29 2.94l.001.001zm-8.7-8.28v2.24h-2.94v8.03H4.02v-8.03H1.08V9.9h8.7v.001z",
+  "React": "M14 10.44c-.36 0-.7.06-1.02.18a2.28 2.28 0 0 0-1.1 3.1 2.28 2.28 0 0 0 3.11 1.1A2.28 2.28 0 0 0 16.28 12a2.28 2.28 0 0 0-2.28-1.56zm0-2.87c2.44 0 4.72.36 6.42.99.5.19.94.4 1.32.63a5.29 5.29 0 0 1 1.1.81c.6.63.6 1.44 0 2.07a5.3 5.3 0 0 1-1.1.81c-.38.23-.82.44-1.32.63-1.7.63-3.98.99-6.42.99-2.44 0-4.72-.36-6.42-.99-.5-.19-.94-.4-1.32-.63a5.3 5.3 0 0 1-1.1-.81c-.6-.63-.6-1.44 0-2.07a5.3 5.3 0 0 1 1.1-.81c.38-.23.82-.44 1.32-.63C9.28 7.93 11.56 7.57 14 7.57zm0-2.87c2.86 0 5.5.42 7.42 1.13 1.06.4 2 .89 2.71 1.65.72.77.72 1.83 0 2.6-.71.76-1.65 1.25-2.71 1.65-1.92.71-4.56 1.13-7.42 1.13-2.86 0-5.5-.42-7.42-1.13-1.06-.4-2-.89-2.71-1.65-.72-.77-.72-1.83 0-2.6C4.58 5.72 5.52 5.23 6.58 4.83 8.5 4.12 11.14 3.7 14 3.7z",
+  "Next.js": "M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.052.54-.052.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.859-8.292-8.208-9.695a12.597 12.597 0 0 0-2.499-.523A33.119 33.119 0 0 0 11.573 0zm4.069 7.217c.347 0 .408.005.486.047a.473.473 0 0 1 .237.277c.018.06.023 1.365.018 4.304l-.006 4.218-.744-1.14-.746-1.14v-3.066c0-1.982.01-3.097.023-3.15a.478.478 0 0 1 .233-.296c.096-.05.13-.054.5-.054z",
+  "Node.js": "M11.998 24c-.321 0-.641-.084-.922-.247L8.14 21.815c-.438-.245-.224-.332-.08-.383.515-.18.62-.22 1.17-.533.058-.033.134-.021.193.014l2.256 1.34a.255.255 0 0 0 .242 0l8.795-5.076a.245.245 0 0 0 .12-.213V7.038a.25.25 0 0 0-.122-.216l-8.793-5.07a.245.245 0 0 0-.241 0L3.884 6.82a.247.247 0 0 0-.123.213v10.139c0 .086.047.168.123.212l2.409 1.39c1.308.653 2.108-.116 2.108-.89V7.789c0-.126.1-.224.226-.224h1.115c.124 0 .226.098.226.224v10.095c0 1.757-.957 2.764-2.623 2.764-.512 0-.916 0-2.042-.554l-2.305-1.327a1.845 1.845 0 0 1-.922-1.598V7.038c0-.659.353-1.27.922-1.601L12.92.36a1.926 1.926 0 0 1 1.919 0l8.795 5.077c.57.33.924.942.924 1.6v10.14c0 .658-.354 1.27-.924 1.603l-8.795 5.077a1.899 1.899 0 0 1-.84.243zM13.09 16.44c-3.848 0-4.652-1.766-4.652-3.248 0-.124.102-.224.227-.224h1.136c.113 0 .207.081.225.19.153 1.034.61 1.556 3.064 1.556 1.886 0 2.689-.426 2.689-1.428 0-.577-.227-1.004-3.159-1.29-2.449-.242-3.963-.782-3.963-2.739 0-1.802 1.52-2.876 4.068-2.876 2.862 0 4.28.994 4.46 3.125a.228.228 0 0 1-.058.18.225.225 0 0 1-.167.076h-1.142a.226.226 0 0 1-.217-.173c-.244-1.087-.84-1.435-2.876-1.435-2.117 0-2.306.738-2.306 1.289 0 .67.283.864 3.062 1.242 2.75.374 4.058.903 4.058 2.833 0 1.945-1.623 3.061-4.482 3.061z",
+  "Golang": "M1.811 10.231c-.047 0-.06-.023-.036-.061l.557-.863c.028-.043.088-.079.145-.079h9.749c.047 0 .059.035.036.078l-.446.859c-.022.045-.079.08-.135.08l-9.87-.014zm-.774 2.302c-.047 0-.06-.024-.036-.062l.557-.863c.028-.043.088-.078.145-.078h12.446c.047 0 .059.035.036.078l-.216.774a.19.19 0 0 1-.178.136l-12.754.015zm7.777 2.28c-.047 0-.06-.024-.036-.062l.372-.66c.028-.043.082-.078.14-.078h5.458c.047 0 .071.035.059.078l-.163.651a.187.187 0 0 1-.178.135l-5.652-.064zM22.801 9.698c-1.706.435-2.87.76-4.539 1.198-.408.108-.43.119-.784-.27-.404-.46-.708-.768-1.283-1.038-1.725-.85-3.4-.612-4.96.404-1.868 1.216-2.83 3.017-2.805 5.146.026 2.103 1.471 3.83 3.545 4.122 1.783.25 3.28-.39 4.476-1.723.238-.293.428-.615.678-.99h-5.083c-.569 0-.713-.346-.522-.799.356-.853 1.011-2.29 1.394-3.008.076-.15.257-.395.618-.395h9.463c-.052.784-.052 1.568-.156 2.352-.28 2.084-1.021 3.986-2.475 5.606-2.36 2.623-5.439 3.402-8.776 2.232-3.045-1.067-4.973-3.216-5.477-6.422-.593-3.78.669-6.925 3.63-9.171 2.377-1.803 5.104-2.348 7.985-1.417 1.684.545 2.886 1.665 3.744 3.345.194.36.065.554-.415.674z",
+  ".NET / C#": "M24 8.77h-2.468v7.565h-1.425V8.77h-2.462V7.53H24zm-6.852 7.565h-4.821V7.53h4.63v1.24h-3.205v2.494h2.953v1.234h-2.953v2.604h3.396zm-6.708 0H8.882L4.78 9.863a2.896 2.896 0 0 1-.258-.51h-.036c.032.189.048.592.048 1.21v5.772H3.157V7.53h1.659l3.965 6.32c.167.261.275.442.323.54h.024c-.04-.233-.059-.634-.059-1.203V7.53h1.355z",
+  "Docker": "M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.185-.186h-2.119a.186.186 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.185-.186h-2.118a.186.186 0 0 0-.186.185v1.888c0 .102.083.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 0 0-.75.748 11.376 11.376 0 0 0 .692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 0 0 3.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z",
+};
+
+const techGrid = CORE_STACK.map((tech) => ({
+  ...tech,
+  path: ICONS[tech.name] ?? null,
+}));
 
 const homeJsonLd = {
   "@context": "https://schema.org",
@@ -45,67 +66,84 @@ const homeJsonLd = {
       </div>
       <div class="flex items-center gap-2">
         <a href={CV_URL} target="_blank" rel="noreferrer" aria-label={t(lang, "intro.viewCv")} class="inline-flex items-center gap-1.5 rounded-md bg-secondary text-secondary-foreground px-3 h-8 text-sm font-medium hover:opacity-90">
-          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" /></svg>
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
           <span class="hidden sm:inline">{t(lang, "intro.viewCv")}</span>
         </a>
         <a href={CV_PDF_URL} download aria-label={t(lang, "intro.downloadCv")} class="inline-flex items-center gap-1.5 rounded-md bg-primary text-primary-foreground px-3 h-8 text-sm font-medium hover:opacity-90">
-          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
           <span class="hidden sm:inline">{t(lang, "intro.downloadCv")}</span>
         </a>
       </div>
     </div>
 
-    <p class="relative mt-3 text-muted-foreground text-sm lg:text-base">{t(lang, "intro.bio")}</p>
-    <p class="relative mt-2 text-sm text-muted-foreground flex flex-wrap gap-x-3 gap-y-1">
-      <span>{t(lang, "intro.roles")}</span>
-      <span aria-hidden="true">·</span>
-      <span>{t(lang, "intro.location")}</span>
-    </p>
+    <div class="relative space-y-4 mt-4">
+      <p class="text-sm lg:text-base font-medium bg-gradient-to-r from-sky-500 to-cyan-400 bg-clip-text text-transparent">{t(lang, "intro.roles")}</p>
+      <p class="text-sm lg:text-base text-muted-foreground">{t(lang, "intro.location")} <span class="ml-1">🇮🇩</span></p>
+      <p class="leading-[1.8] md:leading-loose text-neutral-800 dark:text-neutral-300 text-justify">{t(lang, "intro.bio")}</p>
+    </div>
   </section>
 
   <!-- Stats -->
-  <section class="mt-4 grid grid-cols-2 lg:grid-cols-3 gap-3">
-    {STATS.map((s) => (
-      <div class="rounded-md border bg-card text-card-foreground p-4">
-        <p class="text-xl lg:text-2xl font-semibold font-sora">{s.value}</p>
-        <p class="text-xs lg:text-sm text-muted-foreground mt-0.5">{s.label}</p>
-      </div>
-    ))}
-  </section>
-
-  <!-- Experience -->
-  <section class="mt-8">
-    <h2 class="text-xl lg:text-2xl font-semibold font-sora">{t(lang, "sections.experience")}</h2>
-    <p class="text-sm text-muted-foreground mt-1">{t(lang, "sections.experienceSub")}</p>
-    <div class="mt-4 space-y-3">
-      {EXPERIENCE.map((job) => (
-        <article class:list={["rounded-md border p-4 lg:p-5 bg-card text-card-foreground", job.highlight && "ring-1 ring-sky-500/30"]}>
-          <div class="flex justify-between items-start gap-3 flex-wrap">
-            <div>
-              <h3 class="font-semibold font-sora">{job.title}</h3>
-              <p class="text-sm text-muted-foreground">{job.org} · {job.location}</p>
-            </div>
-            <span class="text-xs px-2 py-1 rounded border bg-secondary text-secondary-foreground whitespace-nowrap">{job.period}</span>
-          </div>
-          <ul class="mt-3 space-y-1.5 text-sm text-muted-foreground list-disc pl-5">
-            {job.bullets.map((b) => <li>{b}</li>)}
-          </ul>
-        </article>
+  <section class="mt-4 p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {STATS.map((s) => (
+        <div class="group rounded-md border bg-background p-4 text-center transition-shadow hover:shadow-md hover:border-sky-500/40 hover:-translate-y-1 duration-200">
+          <div class="text-2xl lg:text-3xl font-bold font-sora text-sky-500 transition-transform group-hover:scale-105">{s.value}</div>
+          <div class="text-xs lg:text-sm text-muted-foreground mt-1">{s.label}</div>
+        </div>
       ))}
     </div>
   </section>
 
+  <!-- Career -->
+  <section class="space-y-4 mt-4 p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+    <div class="space-y-1">
+      <h2 class="flex items-center text-xl font-semibold font-sora">
+        <svg class="mr-2 size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        {t(lang, "sections.experience")}
+      </h2>
+      <p class="text-sm text-muted-foreground">{t(lang, "sections.experienceSub")}</p>
+    </div>
+    <ol class="relative border-l border-border ml-2">
+      {EXPERIENCE.map((row) => (
+        <li class="group mb-8 ml-6 last:mb-0">
+          <span class="absolute -left-3 grid place-items-center size-6 rounded-full bg-muted ring-4 ring-background transition-colors group-hover:bg-sky-500 group-hover:text-white">
+            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </span>
+          <div class="flex flex-wrap items-center gap-2">
+            <h3 class="font-medium font-sora group-hover:text-sky-500 transition-colors">{row.title}</h3>
+            {row.highlight && (
+              <span class="text-[10px] uppercase tracking-wide bg-primary text-primary-foreground rounded px-1.5 py-0.5">Now</span>
+            )}
+          </div>
+          <p class="text-sm text-muted-foreground">{row.org}</p>
+          <p class="text-xs text-muted-foreground mt-0.5">{row.period} · {row.location}</p>
+          {row.bullets.length > 0 && (
+            <ul class="mt-2 space-y-1.5 list-disc pl-5 text-sm leading-relaxed text-justify marker:text-muted-foreground">
+              {row.bullets.map((b) => <li>{b}</li>)}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ol>
+  </section>
+
   <!-- Skills -->
-  <section class="mt-8">
-    <h2 class="text-xl lg:text-2xl font-semibold font-sora">{t(lang, "sections.skills")}</h2>
-    <p class="text-sm text-muted-foreground mt-1">{t(lang, "sections.skillsSub")}</p>
-    <div class="mt-4 space-y-4">
+  <section class="space-y-4 mt-4 p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+    <div class="space-y-1">
+      <h2 class="flex items-center text-xl font-semibold font-sora">
+        <svg class="mr-2 size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg>
+        {t(lang, "sections.skills")}
+      </h2>
+      <p class="text-sm text-muted-foreground">{t(lang, "sections.skillsSub")}</p>
+    </div>
+    <div class="space-y-4">
       {SKILL_GROUPS.map((group) => (
         <div>
-          <p class="text-sm font-medium">{group.label}</p>
-          <ul class="mt-2 flex flex-wrap gap-2">
+          <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">{group.label}</p>
+          <ul class="flex flex-wrap gap-2">
             {group.items.map((item) => (
-              <li class="rounded-md border bg-card px-2.5 py-1 text-xs text-card-foreground">{item}</li>
+              <li class="bg-muted rounded-xl px-3 py-1.5 text-sm cursor-default transition-colors hover:bg-sky-500/15 hover:text-sky-500">{item}</li>
             ))}
           </ul>
         </div>
@@ -114,98 +152,146 @@ const homeJsonLd = {
   </section>
 
   <!-- Tech stack -->
-  <section class="mt-8">
-    <h2 class="text-xl lg:text-2xl font-semibold font-sora">{t(lang, "sections.techStack")}</h2>
-    <p class="text-sm text-muted-foreground mt-1">{t(lang, "sections.techStackSub")}</p>
-    <ul class="mt-4 flex flex-wrap gap-2">
-      {CORE_STACK.map((tech) => (
-        <li class="flex items-center gap-2 rounded-md border bg-card px-3 py-2 text-sm text-card-foreground">
-          <span aria-hidden="true" class="size-2 rounded-full" style={`background:${tech.color}`}></span>
-          {tech.name}
-        </li>
+  <section class="space-y-4 mt-4 p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+    <div class="space-y-1">
+      <h2 class="flex items-center text-xl font-semibold font-sora">
+        <svg class="mr-2 size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>
+        {t(lang, "sections.techStack")}
+      </h2>
+      <p class="text-sm text-muted-foreground">{t(lang, "sections.techStackSub")}</p>
+    </div>
+    <div class="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
+      {techGrid.map((tech) => (
+        <div class="group flex flex-col items-center justify-center gap-2 rounded-xl border bg-muted/40 px-2 py-4 text-center transition-all hover:border-sky-500/40 hover:bg-muted hover:shadow-md hover:-translate-y-1 duration-200">
+          {tech.path ? (
+            <svg class="size-8 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill={`#${tech.color.replace("#", "")}`} aria-hidden="true"><path d={tech.path} /></svg>
+          ) : (
+            <span class="size-8 rounded-full" style={`background:${tech.color}`} aria-hidden="true"></span>
+          )}
+          <span class="text-xs font-medium text-muted-foreground group-hover:text-foreground">{tech.name}</span>
+        </div>
       ))}
-    </ul>
+    </div>
   </section>
 
   <!-- Projects preview -->
-  <section class="mt-8">
-    <div class="flex items-baseline justify-between gap-3">
-      <div>
-        <h2 class="text-xl lg:text-2xl font-semibold font-sora">{t(lang, "sections.projects")}</h2>
-        <p class="text-sm text-muted-foreground mt-1">{t(lang, "sections.projectsSub")}</p>
+  {projects.length > 0 && (
+    <section class="space-y-4 mt-4 p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+      <div class="flex items-center justify-between gap-3">
+        <div class="space-y-1">
+          <h2 class="flex items-center text-xl font-semibold font-sora">
+            <svg class="mr-2 size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            {t(lang, "sections.projects")}
+            <span class="ml-3 rounded-full bg-sky-500/10 text-sky-500 text-xs font-medium px-2.5 py-0.5">{totalProjects} projects</span>
+          </h2>
+          <p class="text-sm text-muted-foreground">{t(lang, "sections.projectsSub")}</p>
+        </div>
+        <a href="/projects/" class="text-sm text-sky-500 hover:underline whitespace-nowrap">{t(lang, "sections.viewAll")}</a>
       </div>
-      <a href="/projects" class="text-sm text-sky-500 hover:underline whitespace-nowrap">{t(lang, "sections.viewAll")}</a>
-    </div>
-    <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {projects.map((p) => (
-        <a href={`/projects/${p.slug}`} class="group rounded-md border bg-card text-card-foreground overflow-hidden hover:ring-1 hover:ring-sky-500/40 transition-all">
-          {p.cover && <img src={p.cover} alt={p.title} loading="lazy" width="400" height="225" class="aspect-video w-full object-cover" />}
-          <div class="p-4">
-            <h3 class="font-medium font-sora text-sm group-hover:text-sky-500">{p.title}</h3>
-            <p class="mt-1 text-xs text-muted-foreground line-clamp-2">{p.description}</p>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
+      <div class="grid sm:grid-cols-2 gap-3">
+        {projects.map((p) => (
+          <a href={`/projects/${p.slug}/`} class="group block rounded-md border bg-background overflow-hidden hover:shadow-md hover:border-sky-500/40 transition-all h-full hover:-translate-y-1 duration-200">
+            {p.images && p.images.length > 0 && (
+              <img src={p.images[0]} alt={p.title} loading="lazy" class="w-full h-32 object-cover object-top bg-muted transition-transform duration-300 group-hover:scale-105" />
+            )}
+            <div class="p-4">
+              <h3 class="font-medium font-sora group-hover:text-sky-500 transition-colors">{p.title}</h3>
+              {p.company && <p class="text-[11px] uppercase tracking-wide text-sky-500 mt-0.5">{p.company}</p>}
+              {p.description && <p class="text-sm text-muted-foreground line-clamp-2 mt-1">{p.description}</p>}
+              {p.tags && p.tags.length > 0 && (
+                <div class="flex flex-wrap gap-1.5 mt-3">
+                  {p.tags.slice(0, 4).map((tag) => (
+                    <span class="text-[11px] bg-muted rounded px-1.5 py-0.5 text-muted-foreground">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
 
   <!-- Education -->
-  <section class="mt-8">
-    <h2 class="text-xl lg:text-2xl font-semibold font-sora">{t(lang, "sections.education")}</h2>
-    <p class="text-sm text-muted-foreground mt-1">{t(lang, "sections.educationSub")}</p>
-    <div class="mt-4 space-y-3">
-      {EDUCATION.map((ed) => (
-        <article class="rounded-md border p-4 bg-card text-card-foreground">
-          <div class="flex justify-between items-start gap-3 flex-wrap">
-            <div>
-              <h3 class="font-semibold font-sora text-sm">{ed.title}</h3>
-              <p class="text-sm text-muted-foreground">{ed.org} · {ed.location}</p>
-              {ed.grade && <p class="text-xs text-emerald-500 mt-0.5">{ed.grade}</p>}
-            </div>
-            <span class="text-xs px-2 py-1 rounded border bg-secondary text-secondary-foreground whitespace-nowrap">{ed.period}</span>
-          </div>
-        </article>
-      ))}
+  <section class="space-y-4 mt-4 p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+    <div class="space-y-1">
+      <h2 class="flex items-center text-xl font-semibold font-sora">
+        <svg class="mr-2 size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        {t(lang, "sections.education")}
+      </h2>
+      <p class="text-sm text-muted-foreground">{t(lang, "sections.educationSub")}</p>
     </div>
+    <ol class="relative border-l border-border ml-2">
+      {EDUCATION.map((row) => (
+        <li class="mb-6 ml-6 last:mb-0">
+          <span class="absolute -left-3 grid place-items-center size-6 rounded-full bg-muted ring-4 ring-background">
+            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </span>
+          <div class="flex flex-wrap items-center gap-2">
+            <h3 class="font-medium font-sora">{row.title}</h3>
+            {row.grade && <span class="text-[10px] uppercase tracking-wide bg-muted text-muted-foreground rounded px-1.5 py-0.5">{row.grade}</span>}
+          </div>
+          <p class="text-sm text-muted-foreground">{row.org}</p>
+          <p class="text-xs text-muted-foreground mt-0.5">{row.period} · {row.location}</p>
+        </li>
+      ))}
+    </ol>
   </section>
 
   <!-- Certifications -->
-  <section class="mt-8">
-    <h2 class="text-xl lg:text-2xl font-semibold font-sora">{t(lang, "sections.certifications")}</h2>
-    <p class="text-sm text-muted-foreground mt-1">{t(lang, "sections.certificationsSub")}</p>
-    <div class="mt-4 grid gap-3 sm:grid-cols-2">
-      {CERTIFICATIONS.slice(0, 6).map((c) => (
-        <article class="rounded-md border p-4 bg-card text-card-foreground">
-          <h3 class="font-medium text-sm font-sora">{c.title}</h3>
+  <section class="space-y-4 mt-4 p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+    <div class="space-y-1">
+      <h2 class="flex items-center text-xl font-semibold font-sora">
+        <svg class="mr-2 size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="m8.21 13.89-1.21 7.11 5-3 5 3-1.21-7.12"/></svg>
+        {t(lang, "sections.certifications")}
+      </h2>
+      <p class="text-sm text-muted-foreground">{t(lang, "sections.certificationsSub")}</p>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3">
+      {CERTIFICATIONS.map((c) => (
+        <div class="flex flex-col rounded-md border bg-background p-4 hover:shadow-md hover:border-sky-500/40 transition-all">
+          {c.thumbnail && (
+            <img src={c.thumbnail} alt={c.title} loading="lazy" class="aspect-[16/9] w-full rounded-md border object-cover object-top bg-muted" />
+          )}
+          <p class="mt-3 font-medium text-sm font-sora leading-snug">{c.title}</p>
           <p class="text-xs text-muted-foreground mt-1">{c.issuer} · {c.date}</p>
           {c.credentialUrl && (
-            <a href={c.credentialUrl} target="_blank" rel="noreferrer" class="mt-2 inline-block text-xs text-sky-500 hover:underline">Verify credential</a>
+            <a href={c.credentialUrl} target="_blank" rel="noreferrer" class="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+              Lihat kredensial
+              <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+            </a>
           )}
-        </article>
+        </div>
       ))}
     </div>
-    <a href="/uses" class="mt-3 inline-block text-sm text-sky-500 hover:underline">{t(lang, "sections.viewAll")}</a>
   </section>
 
   <!-- Blog preview -->
-  <section class="mt-8">
-    <div class="flex items-baseline justify-between gap-3">
-      <div>
-        <h2 class="text-xl lg:text-2xl font-semibold font-sora">{t(lang, "sections.blogs")}</h2>
-        <p class="text-sm text-muted-foreground mt-1">{t(lang, "sections.blogsSub")}</p>
+  {latestPosts.length > 0 && (
+    <section class="space-y-4 mt-4 p-4 lg:p-8 rounded-md border bg-card text-card-foreground">
+      <div class="flex items-center justify-between gap-3">
+        <div class="space-y-1">
+          <h2 class="flex items-center text-xl font-semibold font-sora">
+            <svg class="mr-2 size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
+            {t(lang, "sections.blogs")}
+          </h2>
+          <p class="text-sm text-muted-foreground">{t(lang, "sections.blogsSub")}</p>
+        </div>
+        <a href="/blogs/" class="text-sm text-sky-500 hover:underline whitespace-nowrap">{t(lang, "sections.viewAll")}</a>
       </div>
-      <a href="/blogs" class="text-sm text-sky-500 hover:underline whitespace-nowrap">{t(lang, "sections.viewAll")}</a>
-    </div>
-    <div class="mt-4 space-y-3">
-      {latestPosts.map((p) => (
-        <a href={`/blogs/${p.slug}`} class="block rounded-md border p-4 bg-card text-card-foreground hover:ring-1 hover:ring-sky-500/40 transition-all">
-          <h3 class="font-medium font-sora text-sm">{p.preview.title}</h3>
-          <p class="mt-1 text-xs text-muted-foreground line-clamp-2">{p.preview.description}</p>
-          <p class="mt-2 text-xs text-muted-foreground">{p.preview.date} · {estimateReadMinutes(p.preview.body)} {t(lang, "sections.minRead")}</p>
-        </a>
-      ))}
-    </div>
-  </section>
+      <ul class="divide-y divide-border">
+        {latestPosts.map((p) => (
+          <li class="py-3 first:pt-0">
+            <a href={`/blogs/${p.slug}/`} class="group block">
+              <h3 class="font-medium font-sora group-hover:text-sky-500 transition-colors">{p.title}</h3>
+              {p.description && <p class="text-sm text-muted-foreground line-clamp-2 mt-0.5">{p.description}</p>}
+              <p class="text-xs text-muted-foreground mt-1">{p.date} · {estimateReadMinutes(p.body)} {t(lang, "sections.minRead")}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 </BaseLayout>
 
 <style is:inline>

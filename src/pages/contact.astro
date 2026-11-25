@@ -103,7 +103,13 @@ const inputClass = "w-full rounded-md border bg-background px-3 py-2 text-sm out
           form.reset();
         })
         .catch(function () {
-          status.textContent = "Gagal kirim. Email langsung: dickiprasetya176@gmail.com";
+          // Static site has no mail backend unless RESEND_API_KEY is set on the
+          // worker, so fall back to a prefilled mailto draft instead of losing
+          // the message.
+          var body = "Nama: " + payload.name + "\nEmail: " + payload.email + "\n\n" + payload.message;
+          var href = "mailto:dickiprasetya176@gmail.com?subject=" +
+            encodeURIComponent("Pesan dari " + payload.name) + "&body=" + encodeURIComponent(body);
+          status.innerHTML = 'Gagal kirim otomatis. <a class="text-sky-500 underline" href="' + href + '">Kirim via email</a>.';
         })
         .finally(function () {
           sending = false;
